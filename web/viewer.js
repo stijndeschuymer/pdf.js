@@ -170,12 +170,12 @@ function webViewerLoad() {
 //#if !PRODUCTION
   require.config({paths: {'pdfjs': '../src', 'pdfjs-web': '.'}});
   require(['pdfjs-web/app', 'mozPrintCallback_polyfill.js'], function (web) {
-    window.PDFViewerApplication = web.PDFViewerApplication;
-    web.PDFViewerApplication.run(config);
+    window.PDFViewerApplication = new web.PDFViewerApplication;
+    window.PDFViewerApplication.run(config);
   });
 //#else
-//window.PDFViewerApplication = pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication;
-//pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication.run(config);
+//window.PDFViewerApplication = new pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication;
+//window.PDFViewerApplication.run(config);
 //#endif
 }
 
