@@ -93,6 +93,7 @@ const PDFAttachmentViewer = pdfAttachmentViewerLib.PDFAttachmentViewer;
 const PDFFindController = pdfFindControllerLib.PDFFindController;
 const PDFFindBar = pdfFindBarLib.PDFFindBar;
 const getGlobalEventBus = domEventsLib.getGlobalEventBus;
+const EventBus = uiUtilsLib.EventBus;
 
 const DEFAULT_SCALE_DELTA = 1.1;
 const MIN_SCALE = 0.25;
@@ -186,26 +187,11 @@ class PDFViewerApplication {
         this.externalServices = DefaultExernalServices;
     }
 
-    static configure(PDFJS) {
-          PDFJS.imageResourcesPath = './images/';
-        //#if (FIREFOX || MOZCENTRAL || GENERIC || CHROME)
-        //PDFJS.workerSrc = '../build/pdf.worker.js';
-        //#endif
-        //#if !PRODUCTION
-          PDFJS.cMapUrl = '../external/bcmaps/';
-          PDFJS.cMapPacked = true;
-          PDFJS.workerSrc = '../src/worker_loader.js';
-        //#else
-        //PDFJS.cMapUrl = '../web/cmaps/';
-        //PDFJS.cMapPacked = true;
-        //#endif
-    }
-
     initialize(appConfig) {
-        configure(pdfjsLib.PDFJS);
+        //configure(pdfjsLib.PDFJS);
         this.appConfig = appConfig;
 
-        const eventBus = appConfig.eventBus || getGlobalEventBus();
+        const eventBus = appConfig.eventBus ? getGlobalEventBus() : new EventBus();
         this.eventBus = eventBus;
         this.bindEvents();
 
@@ -222,6 +208,7 @@ class PDFViewerApplication {
         this.downloadManager = downloadManager;
 
         const container = appConfig.mainContainer;
+        this.container = container;
         const viewer = appConfig.viewerContainer;
         this.pdfViewer = new PDFViewer({
             container,
@@ -469,7 +456,8 @@ class PDFViewerApplication {
     }
 
     get loadingBar() {
-        const bar = new ProgressBar('#loadingBar', {});
+        const loadingBarElement = this.container.parentNode.querySelector('#loadingBar .progress');
+        const bar = new ProgressBar(loadingBarElement, {});
 
         return pdfjsLib.shadow(this, 'loadingBar', bar);
     }
@@ -1917,17 +1905,17 @@ class PDFViewerApplication {
     }
 
 
-    webViewerResize(evt) {
+    onResize(evt) {
       this.eventBus.dispatch('resize');
     }
 
-    webViewerHashchange(evt) {
+    onHashChange(evt) {
       var hash = document.location.hash.substring(1);
       this.eventBus.dispatch('hashchange', {hash: hash});
     }
 
 //#if GENERIC
-    webViewerChange(evt) {
+    onChange(evt) {
       var files = evt.target.files;
       if (!files || files.length === 0) {
         return;

@@ -293,8 +293,13 @@ function getVisibleElements(scrollEl, views, sortByVisibility) {
 
   function isElementBottomBelowViewTop(view) {
     var element = view.div;
-    var elementBottom =
-      element.offsetTop + element.clientTop + element.clientHeight;
+    var offsetParent = element.offsetParent;
+    var elementBottom = element.offsetTop + element.clientTop + element.clientHeight;
+    while (offsetParent && offsetParent !== scrollEl) {
+      elementBottom += offsetParent.offsetTop + offsetParent.clientTop;
+      offsetParent = offsetParent.offsetParent;
+    }
+
     return elementBottom > top;
   }
 
@@ -303,11 +308,18 @@ function getVisibleElements(scrollEl, views, sortByVisibility) {
   var currentWidth, viewWidth;
   var firstVisibleElementInd = (views.length === 0) ? 0 :
     binarySearchFirstItem(views, isElementBottomBelowViewTop);
+  var heightFromTop;
 
   for (var i = firstVisibleElementInd, ii = views.length; i < ii; i++) {
     view = views[i];
     element = view.div;
+    var offsetParent = element.offsetParent;
     currentHeight = element.offsetTop + element.clientTop;
+    heightFromTop = element.offsetTop + element.clientTop;
+    while (offsetParent && offsetParent !== scrollEl) {
+      heightFromTop += offsetParent.offsetTop + offsetParent.clientTop;
+      offsetParent = offsetParent.offsetParent;
+    }
     viewHeight = element.clientHeight;
 
     if (currentHeight > bottom) {
@@ -319,14 +331,14 @@ function getVisibleElements(scrollEl, views, sortByVisibility) {
     if (currentWidth + viewWidth < left || currentWidth > right) {
       continue;
     }
-    hiddenHeight = Math.max(0, top - currentHeight) +
-      Math.max(0, currentHeight + viewHeight - bottom);
+    hiddenHeight = Math.max(0, top - heightFromTop) +
+      Math.max(0, heightFromTop + viewHeight - bottom);
     percentHeight = ((viewHeight - hiddenHeight) * 100 / viewHeight) | 0;
 
     visible.push({
       id: view.id,
       x: currentWidth,
-      y: currentHeight,
+      y: heightFromTop,
       view: view,
       percent: percentHeight
     });
@@ -433,11 +445,11 @@ var ProgressBar = (function ProgressBarClosure() {
     return Math.min(Math.max(v, min), max);
   }
 
-  function ProgressBar(id, opts) {
+  function ProgressBar(element, opts) {
     this.visible = true;
 
     // Fetch the sub-elements for later.
-    this.div = document.querySelector(id + ' .progress');
+    this.div = element;
 
     // Get the loading bar element, so it can be resized to fit the viewer.
     this.bar = this.div.parentNode;

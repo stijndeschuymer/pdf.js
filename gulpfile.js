@@ -236,7 +236,7 @@ function createWebBundle(defines) {
   } else {
     amdName = 'pdfjs-dist/web/viewer';
     outputName = 'viewer.js';
-    template = 'web/viewer.js';
+    template = 'web/index.js';
     files = ['app.js'];
     if (defines.FIREFOX || defines.MOZCENTRAL) {
       files.push('firefoxcom.js');

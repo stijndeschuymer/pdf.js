@@ -16,7 +16,7 @@
 
 'use strict';
 
-var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = null;
 
 //#if PRODUCTION
 //var pdfjsWebLibs = {
@@ -165,18 +165,11 @@ function getViewerConfiguration() {
   };
 }
 
-function webViewerLoad() {
-  var config = getViewerConfiguration();
-  PDFJS.workerSrc = '../build/pdf.worker.js';
 //#if !PRODUCTION
   require.config({paths: {'pdfjs': '../src', 'pdfjs-web': '.'}});
   require(['pdfjs-web/app', 'mozPrintCallback_polyfill.js'], function (web) {
-    window.PDFViewerApplication = new web.PDFViewerApplication;
-    window.PDFViewerApplication.run(config);
+    window.PDFViewerApplication = web.PDFViewerApplication;
   });
 //#else
-//window.PDFViewerApplication = new pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication;
-//window.PDFViewerApplication.run(config);
+//window.PDFViewerApplication = pdfjsWebLibs.pdfjsWebApp.PDFViewerApplication;
 //#endif
-}
-document.addEventListener('DOMContentLoaded', webViewerLoad, true);
