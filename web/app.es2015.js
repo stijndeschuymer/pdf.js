@@ -194,6 +194,7 @@ class PDFViewerApplication {
         const eventBus = appConfig.eventBus ? getGlobalEventBus() : new EventBus();
         this.eventBus = eventBus;
         this.bindEvents();
+        this.addEventListeners();
 
         const pdfRenderingQueue = new PDFRenderingQueue();
         pdfRenderingQueue.onIdle = this.cleanup.bind(this);
@@ -1890,18 +1891,18 @@ class PDFViewerApplication {
 
 
     addEventListeners () {
-        window.addEventListener('resize', onResize.bind(this));
-        window.addEventListener('hashchange', onHashChange.bind(this));
+        window.addEventListener('resize', this.onResize.bind(this));
+        window.addEventListener('hashchange', this.onHashChange.bind(this));
 //#if GENERIC
-        window.addEventListener('change', onWebViewerChange.bind(this), true);
+        window.addEventListener('change', this.onChange.bind(this), true);
 //#endif
-        window.addEventListener('beforeprint', beforePrint.bind(this));
-        window.addEventListener('afterprint', afterPrint.bind(this));
-        window.addEventListener('keydown', onKeyDown.bind(this));
-        window.addEventListener('localized', localized.bind(this));
-        window.addEventListener('DOMMouseScroll', handleMouseWheel.bind(this));
-        window.addEventListener('mousewheel', handleMouseWheel.bind(this));
-        window.addEventListener('click', onClick, true);
+        window.addEventListener('beforeprint', this.beforePrint.bind(this));
+        window.addEventListener('afterprint', this.afterPrint.bind(this));
+        window.addEventListener('keydown', this.onKeyDown.bind(this));
+        window.addEventListener('localized', this.localized.bind(this));
+        window.addEventListener('DOMMouseScroll', this.handleMouseWheel.bind(this));
+        window.addEventListener('mousewheel', this.handleMouseWheel.bind(this));
+        window.addEventListener('click', this.onClick.bind(this), true);
     }
 
 
