@@ -121,7 +121,7 @@ function scrollIntoView(element, spot, skipOverflowHiddenElements) {
   // Assuming offsetParent is available (it's not available when viewer is in
   // hidden iframe or object). We have to scroll: if the offsetParent is not set
   // producing the error. See also animationStartedClosure.
-  var parent = element.offsetParent;
+  var parent = document.querySelector('.showpad-viewer-scroll-container'); //element.offsetParent;
   if (!parent) {
     console.error('offsetParent is not set -- cannot scroll');
     return;
