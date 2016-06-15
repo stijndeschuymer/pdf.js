@@ -223,8 +223,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var container = appConfig.mainContainer;
                 this.container = container;
                 var viewer = appConfig.viewerContainer;
+                var innerContainer = appConfig.innerContainer;
                 this.pdfViewer = new PDFViewer({
                     container: container,
+                    innerContainer: innerContainer,
                     viewer: viewer,
                     eventBus: eventBus,
                     renderingQueue: pdfRenderingQueue,

@@ -211,8 +211,10 @@ class PDFViewerApplication {
         const container = appConfig.mainContainer;
         this.container = container;
         const viewer = appConfig.viewerContainer;
+        const innerContainer = appConfig.innerContainer;
         this.pdfViewer = new PDFViewer({
             container,
+            innerContainer,
             viewer,
             eventBus,
             renderingQueue: pdfRenderingQueue,
