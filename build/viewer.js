@@ -6400,6 +6400,7 @@ var PDFViewer = (function pdfViewer() {
    */
   function PDFViewer(options) {
     this.container = options.container;
+    this.innerContainer = options.innerContainer;
     this.viewer = options.viewer || options.container.firstElementChild;
     this.eventBus = options.eventBus || domEvents.getGlobalEventBus();
     this.linkService = options.linkService || new SimpleLinkService();
@@ -6742,9 +6743,9 @@ var PDFViewer = (function pdfViewer() {
           0 : SCROLLBAR_PADDING;
         var vPadding = (this.isInPresentationMode || this.removePageBorders) ?
           0 : VERTICAL_PADDING;
-        var pageWidthScale = (this.container.clientWidth - hPadding) /
+        var pageWidthScale = (this.innerContainer.clientWidth - hPadding) /
                              currentPage.width * currentPage.scale;
-        var pageHeightScale = (this.container.clientHeight - vPadding) /
+        var pageHeightScale = (this.innerContainer.clientHeight - vPadding) /
                               currentPage.height * currentPage.scale;
         switch (value) {
           case 'page-actual':
@@ -7273,8 +7274,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var container = appConfig.mainContainer;
                 this.container = container;
                 var viewer = appConfig.viewerContainer;
+                var innerContainer = appConfig.innerContainer;
                 this.pdfViewer = new PDFViewer({
                     container: container,
+                    innerContainer: innerContainer,
                     viewer: viewer,
                     eventBus: eventBus,
                     renderingQueue: pdfRenderingQueue,
